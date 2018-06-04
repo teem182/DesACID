@@ -67,7 +67,20 @@
 
         </td>
     </tr>
+    <tr>
 
+        <td>
+            <br />
+            <input type="button" id="btnTPaises" value="Todos lo Paises" class="btn btn-default btn-xs" />
+            <input type="button" id="btnNPaises" value="Ningun lo Paises" class="btn btn-default btn-xs" />
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
 </table>
 
 <div class="page-header">
@@ -81,6 +94,7 @@
 
 <br />
 <div>
+    <div id="datos"></div>
     <label hidden="hidden" id="Actualiza">No</label>
     <table id="TablaDatos" class="display" style="width:100%"> </table>
 
@@ -93,21 +107,34 @@
     });
 
 
+    $("#btnTPaises").click(function () {
+
+        $('#ListaPaises').selectpicker('selectAll');
+
+    });
+        
+    $("#btnNPaises").click(function () {
+        $('#ListaPaises').selectpicker('deselectAll');
+    });
+
+
+
 
     $("#btnBuscar").click(function () {
 
         
-       
+
         if ($('#ListaPaises').val() == "" || $('#dpDesde').val() == "" || $('#dpHasta').val() == "") {
 
             alert("Faltan datos para la consulta");
 
         } else {
+
             actualizaTabla();
-           
+
         }
 
-
+       
 
     });
 
