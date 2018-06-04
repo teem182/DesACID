@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+    <title>@ViewBag.Title - Mi aplicación ASP.NET</title>
+  
+</head>
+<body>
+
+ <nav class="navbar navbar-default navbar-static-top" role="navigation">
+        <div class="container">
+            <ul class="navbar-form navbar-left">
+                <li>@Html.ActionLink("Tasa de Natalidad y Mortalidad", "TasaNatMor", "TasaNatMor")</li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <div class="container body-content">
+        
+        
+        @RenderBody()
+        
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Mi aplicación ASP.NET para Desafico ACID</p>
+        </footer>
+    </div>
+
+
+
+</body>
+</html>

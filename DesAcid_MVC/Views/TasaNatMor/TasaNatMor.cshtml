@@ -1,0 +1,165 @@
+﻿@{
+    ViewBag.Title = "Tasa de Natalidad y Mortalidad";
+}
+
+<script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
+
+<!-- boostrap datepicker -->
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+<script src="~/Content/dist/boostrap-datepicker/js/bootstrap-datepicker.js"></script>
+
+<link href="~/Content/dist/boostrap-datepicker/css/bootstrap-datepicker.css" rel="stylesheet" />
+
+
+<!--  fin boostrap datepicker -->
+<!--  Datatable -->
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.css" />
+
+<link href="~/Content/dist/css/buttons.dataTables.css" rel="stylesheet" />
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+
+
+
+<!--  fin Datatable -->
+
+<link href="~/Content/dist/css/bootstrap-select.css" rel="stylesheet" />
+
+
+<script src="~/Content/dist/js/bootstrap-select.js"></script>
+
+
+<table>
+    <tr>
+        <td>
+            <select id="ListaPaises" placeholder="Seleccione Paises" class="selectpicker" multiple>
+
+                @foreach (var Pais in Model)
+                {
+                    <option value="@Pais.Country_Code">@Pais.Country_Name</option>
+                }
+
+            </select>
+
+        </td>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+
+        <td>
+            <input type="text" id="dpDesde" class="form-control ro-date" placeholder="Ingrese fecha desde">
+
+        </td>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td>
+            <input type="text" id="dpHasta" class="form-control ro-date" placeholder="Ingrese fecha hasta">
+
+        </td>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td>
+            <input type="button" id="btnBuscar" value="Buscar" class="btn-primary" />
+
+        </td>
+    </tr>
+
+</table>
+
+<div class="page-header">
+    <h1> <small> Tasa de mortalidad y natalidad  de cada año por cada 1.000 personas </small></h1>
+</div>
+
+
+
+
+
+
+<br />
+<div>
+    <label hidden="hidden" id="Actualiza">No</label>
+    <table id="TablaDatos" class="display" style="width:100%"> </table>
+
+</div>
+<script>
+
+
+    $('.ro-date').datepicker({
+        format: "dd/mm/yyyy"
+    });
+
+
+
+    $("#btnBuscar").click(function () {
+
+        
+       
+        if ($('#ListaPaises').val() == "" || $('#dpDesde').val() == "" || $('#dpHasta').val() == "") {
+
+            alert("Faltan datos para la consulta");
+
+        } else {
+            actualizaTabla();
+           
+        }
+
+
+
+    });
+
+    function actualizaTabla() {
+
+
+        var label = $("#Actualiza").text();
+
+        if (label == "Si") {
+            $('#TablaDatos').DataTable().destroy();
+        }
+
+        
+
+        $.get('/TasaNatMor/Busqueda?Paises=' + $('#ListaPaises').val() + '&Desde=' + $('#dpDesde').val() + '&Hasta=' + $('#dpHasta').val(), {
+        }, function (responseText) {
+
+            if (responseText != "") {
+
+                $("#Actualiza").text("Si");
+                var filas = responseText.split("|");
+                var DataSet = new Array(filas.length);
+                for (var i = 0; i < filas.length; i++) {
+
+                    var columna = filas[i].split(",");
+                    DataSet[i] = [columna[0], columna[1], columna[2], columna[3]];
+                }
+
+                var table = $('#TablaDatos').DataTable(
+                    {
+                        data: DataSet,
+                        columns: [
+                            { title: "Pais" },
+                            { title: "Indicador" },
+                            { title: "Año" },
+                            { title: "Tasa" }
+                        ]
+
+                    });
+
+
+            }
+            else {
+                alert("No se encontraron datos");
+            }
+
+        }
+
+        );
+    }
+
+</script>
+
+
+
